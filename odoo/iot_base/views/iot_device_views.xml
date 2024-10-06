@@ -1,0 +1,200 @@
+<odoo>
+    <record id="iot_device_view_tree" model="ir.ui.view">
+        <field name="name">iot.device.view.tree</field>
+        <field name="model">iot.device</field>
+        <field name="arch" type="xml">
+            <tree delete="0">
+                <field name="name" />
+                <field name="iot_communication_id" />
+                <field name="ip" />
+                <field name="group_id" />
+                <field name="tag_ids" />
+                <field name="last_update" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="iot_device_view_form" model="ir.ui.view">
+        <field name="name">iot.device.view.form</field>
+        <field name="model">iot.device</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_point_input"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-chevron-circle-down" >
+                            <field string="Input"
+                                name="count_point_input"
+                                widget="statinfo"
+                                class="o_stat_text" />
+                        </button>
+                        <button name="action_open_point_output"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-chevron-circle-up" >
+                            <field string="Output"
+                                name="count_point_output"
+                                widget="statinfo"
+                                class="o_stat_text" />
+                        </button>
+                    </div>
+                    <field name="active" invisible="1" />
+                    <div class="oe_button_box" name="button_box" />
+                    <widget name="web_ribbon"
+                        title="Archived"
+                        bg_color="text-bg-danger"
+                        invisible="active" />
+                    <field name="image_1920"
+                        widget='image'
+                        class="oe_avatar"
+                        options='{"preview_image": "image_128"}' />
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"
+                                string="Name Device"
+                                placeholder="IoT Gateway" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="token" password="True" groups="iot_base.group_iot_user" />
+                            <field name="iot_communication_id"
+                                widget="selection" />
+                            <field name="ip" />
+                            <field name="group_id" />
+                        </group>
+                        <group>
+                            <field name="tag_ids"
+                                widget="many2many_tags"
+                                options="{'color_field': 'color'}" />
+                            <field name="model" />
+                            <field name="version" />
+                            <field name="last_update" />
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+					<field name="message_follower_ids" />
+					<field name="activity_ids" />
+					<field name="message_ids" />
+				</div>
+            </form>
+        </field>
+    </record>
+
+    <record id="iot_device_view_kanban" model="ir.ui.view">
+        <field name="name">iot.device.view.kanban</field>
+        <field name="model">iot.device</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="name"/>
+                <field name="iot_communication_id"/>
+                <field name="group_id" />
+                <field name="id" />
+                <field name="image_128" />
+                <field name="priority" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image me-1" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                <img 
+                                    t-att-src="kanban_image('iot.device', 'image_128', record.id.raw_value)"
+                                    alt="default_image"
+                                    t-if="record.image_128.raw_value"
+                                    class="o_image_64_contain"/>
+                                <i
+                                    class="fa fa-microchip fa-4x"
+                                    t-if="!record.image_128.raw_value"
+                                />
+                            </div>
+
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top mb-0">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                    <field name="priority" widget="priority"/>
+                                </div>
+                                <t t-if="record.ip.value">[<field name="ip"/>]</t>
+                                <div name="communication" class="mt-1"> 
+                                    Communication: <field name="iot_communication_id"></field>
+                                </div>
+                                <div name="version" class="mt-1">
+                                    Version: <field name="version"></field>
+                                </div>
+                                <div name="last_update" class="mt-1">
+                                    Last update: <field name="last_update"></field>
+                                </div>
+                                <div name="tags"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="iot_device_view_search" model="ir.ui.view">
+        <field name="name">iot.device.view.search</field>
+        <field name="model">iot.device</field>
+        <field name="arch" type="xml">
+            <search string="IoT Device Search">
+                <field name="name" />
+                <field name="group_id" />
+                <field name="model" />
+                <field name="ip" />
+                <field name="iot_communication_id" />
+                <separator />
+                    <filter
+                        name="active"
+                        string="Active"
+                        domain="[('active','=',True)]"
+                    />
+                    <filter
+                        name="inactive"
+                        string="Inactive"
+                        domain="[('active','=',False)]"
+                    />
+                <separator />
+                    <filter
+                        name="priority"
+                        string="Priority"
+                        domain="[('priority', '=', '1')]"
+                    />
+                <group expand="0" string="Group By">
+                    <filter name="group_group" string="Group"
+                        context="{'group_by':'group_id'}" />
+                    <filter name="group_by_tag" string="Tag"
+						context="{'group_by': 'tag_ids'}" />
+					<filter name="group_by_priority" string="Priority"
+						context="{'group_by': 'priority'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="iot_device_action">
+        <field name="name">IoT Devices</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">iot.device</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="iot_device_view_search" />
+        <field name="help" type="html">
+			<p class="o_view_nocontent_smiling_face">
+				No IoT device found. Let's create one!
+			</p>
+		</field>
+    </record>
+
+    <menuitem
+        name="Devices"
+        sequence="10"
+        id="iot_device_menu"
+        action="iot_device_action"
+        parent="iot_root_menu"
+    />
+</odoo>

@@ -1,0 +1,133 @@
+<odoo>
+
+    <record id="iot_point_view_tree" model="ir.ui.view">
+        <field name="name">iot.point.view.tree</field>
+        <field name="model">iot.point</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="point" />
+                <field name="name" />
+                <field name="signal_type" />
+                <field name="update_cycle" />
+                <field name="status" />
+                <field name="last_value" />
+                <field name="last_value_date" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="iot_point_view_form" model="ir.ui.view">
+        <field name="name">iot.point.view.form</field>
+        <field name="model">iot.point</field>
+        <field name="arch" type="xml">
+            <form>
+				<sheet>
+					<div class="oe_button_box" name="button_box">
+					</div>
+					<div class="badge rounded-pill text-bg-success float-end fs-6"
+                        invisible="status != 'connected' or status == 'not_monitored'">Connected</div>
+					<div class="badge rounded-pill text-bg-warning float-end fs-6"
+                        invisible="status != 'disconnected' or status == 'not_monitored'">Disconnected</div>
+                    <div class="badge rounded-pill text-bg-light float-end fs-6"
+                        invisible="status != 'not_monitored'">Not Monitored</div>
+					<div class="oe_title">
+						<h1>
+							<field name="point" string="Point" />
+						</h1>
+					</div>
+					<group>
+						<group>
+							<field name="name"
+								placeholder="Description of the point" />
+							<field name="token" password="True" groups="iot_base.group_iot_user"/>
+							<field name="signal_type" />
+							<field name="is_monitored" />
+						</group>
+						<group>
+							<field name="update_cycle" />
+							<field name="last_value" />
+							<field name="last_value_date" />
+							<field name="status" />
+						</group>
+					</group>
+				</sheet>
+				<div class="oe_chatter">
+					<field name="message_follower_ids" />
+					<field name="activity_ids" />
+					<field name="message_ids" />
+				</div>
+			</form>
+        </field>
+    </record>
+
+    <record id="iot_point_view_search" model="ir.ui.view">
+        <field name="name">iot.point.view.search</field>
+        <field name="model">iot.point</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="point" />
+                <field name="name" />
+                <field name="iot_device_id" />
+                <field name="status" />
+                <field name="signal_type" />
+                <separator />
+                    <filter
+                        name="active"
+                        string="Active"
+                        domain="[('active','=',True)]"
+                        help="Active"
+                    />
+                    <filter
+                        name="inactive"
+                        string="Inactive"
+                        domain="[('active','=',False)]"
+                        help="Inactive"
+                    />
+                <separator />
+                    <filter name="signal_type_in" string="Input"
+                        domain="[('signal_type', '=', 'input')]" />
+                    <filter name="signal_type_out" string="Output"
+                        domain="[('signal_type', '=', 'output')]" />
+                    <filter name="status_connect" string="Connected"
+                        domain="[('status', '=', 'connected')]" />
+                    <filter name="status_disconnect" string="Disconnected"
+                        domain="[('status', '=', 'disconnected')]" />
+                    <filter name="status_not_monitored" string="Not Monitored"
+                        domain="[('status', '=', 'not_monitored')]" />
+                <separator />
+                <group expand="0" string="Group By">
+                    <filter name="group_by_signal_type" string="Signal Type"
+						context="{'group_by': 'signal_type'}" />
+					<filter name="group_by_status" string="Status"
+						context="{'group_by': 'status'}" />
+                    <filter name="group_by_iot_device_id" string="Device"
+                        context="{'group_by':'iot_device_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="iot_point_action" model="ir.actions.act_window">
+		<field name="name">Iot Point</field>
+		<field name="res_model">iot.point</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_id" ref="iot_point_view_form" />
+		<field name="search_view_id" ref="iot_point_view_search" />
+		<field name="context">{'search_default_group_by_iot_device_id': 1}</field>
+		<field name="help" type="html">
+			<p class="o_view_nocontent_smiling_face">
+				No IoT point found. Let's create one!
+			</p>
+		</field>
+	</record>
+
+    <menuitem
+        name="Points"
+        sequence="100"
+        id="iot_system_menu"
+        action="iot_point_action"
+        parent="iot_configuration_menu"
+        groups="group_iot_manager"
+    />
+    
+</odoo>

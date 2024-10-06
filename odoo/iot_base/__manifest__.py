@@ -1,0 +1,23 @@
+{
+    "name": "IoT Base",
+    "version": "17.0.1.0.0",
+    "category": "IoT",
+    "author": "Nguyen Trung Tuan",
+    "license": "AGPL-3",
+    "installable": True,
+    "application": True,
+    "summary": "IoT base module",
+    "website": "",
+    "depends": ["base", "mail"],
+    "data": [
+        "data/system_data.xml",
+        "security/iot_security.xml",
+        "security/ir.model.access.csv",
+        "views/iot_menu.xml",
+        "views/iot_device_tag_view.xml",
+        "views/iot_device_group_view.xml",
+        "views/iot_communication_views.xml",
+        "views/iot_device_views.xml",
+        "views/iot_point_view.xml",
+    ],
+}
