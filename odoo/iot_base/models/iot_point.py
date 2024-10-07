@@ -11,22 +11,22 @@ class IoTPoints(models.Model):
 
     iot_device_id = fields.Many2one('iot.device')
     iot_value_ids = fields.One2many('iot.value', 'iot_point_id')
-    name = fields.Char(string="Name Point")
-    point = fields.Char(string="Point")
+    name = fields.Char(string="Name Point", default="New Point", help="Name of the point")
+    point = fields.Char(string="Point", required=True, help="The unique identifier name of the point on the device.")
     token = fields.Char(related="iot_device_id.token", readonly=True)
     active = fields.Boolean(string="Active", default=True, help="Set it to False if you want to disable it, instead of deleting it.")
     signal_type = fields.Selection([
         ('input', 'Input'),
         ('output', 'Output'),
     ], string="Signal Type")
-    last_value = fields.Char(string="Last Value", compute="_compute_last_value", readonly=True)
-    last_value_date = fields.Datetime(string="Last Value Date", compute="_compute_last_value", readonly=True)
+    last_value = fields.Char(string="Last Value", readonly=True)
+    last_value_date = fields.Datetime(string="Last Value Date", readonly=True)
     is_monitored = fields.Boolean(string='Is Monitored', default=False)
     status = fields.Selection([
         ('connected', 'Connected'),
         ('disconnected', 'Disconnected'),
         ('not_monitored', 'Not Monitored')
-    ], string='Status', default='not_monitored', compute="_compute_status", readonly=True, index=True)
+    ], string='Status', default='not_monitored', compute="_compute_status", readonly=True)
     update_cycle = fields.Float(string='Update Cycle (s)', default=5, digits=(None, 1), help="Update cycle in seconds")
 
 
@@ -38,15 +38,15 @@ class IoTPoints(models.Model):
         ),
     ]
     
-    @api.depends('iot_value_ids')
-    def _compute_last_value(self):
-        for r in self:
-            if r.iot_value_ids:
-                r.last_value = str(r.iot_value_ids[-1].value)
-                r.last_value_date = r.iot_value_ids[-1].create_date
-            else:
-                r.last_value = ""
-                r.last_value_date = False
+    # @api.depends('iot_value_ids')
+    # def _compute_last_value(self):
+    #     for r in self:
+    #         if r.iot_value_ids:
+    #             r.last_value = str(r.iot_value_ids[-1].value)
+    #             r.last_value_date = r.iot_value_ids[-1].create_date
+    #         else:
+    #             r.last_value = ""
+    #             r.last_value_date = False
 
     @api.depends('last_value', 'last_value_date', 'is_monitored')
     def _compute_status(self):

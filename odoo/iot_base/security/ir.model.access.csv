@@ -10,4 +10,4 @@ manage_iot_device_tag,manage_iot_device_tag,model_iot_device_tag,group_iot_manag
 access_iot_point,access_iot_point,model_iot_point,group_iot_user,1,0,0,0
 manage_iot_point,manage_iot_point,model_iot_point,group_iot_manager,1,1,1,0
 access_iot_value,access_iot_value,model_iot_value,group_iot_user,1,0,0,0
-manage_iot_value,manage_iot_value,model_iot_value,group_iot_manager,1,1,1,0
+manage_iot_value,manage_iot_value,model_iot_value,group_iot_manager,1,0,1,0

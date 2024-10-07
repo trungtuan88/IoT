@@ -41,29 +41,28 @@ class IoTDevice(models.Model):
         for r in self:
             r.count_point_input = mapped_data_input.get(r.id, 0)
             r.count_point_output = mapped_data_output.get(r.id, 0)
-    
+
     def action_open_point_input(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('iot_base.iot_point_action')
-        
+        action['domain'] = [('iot_device_id', '=', self.id), ('signal_type', '=', 'input')]
         action['context'] = {
             'default_iot_device_id': self.id,
             'default_signal_type': 'input',
         }
-        if self.count_point_input == 0:
-            action['view_mode'] = 'form'
-            # action['res_id'] = self.iot_point_ids.id
-            # action['views'] = []
-        else:
-            action['view_mode'] = 'tree'
-            action['domain'] = [('iot_device_id', '=', self.id), ('signal_type', '=', 'input')]
+        action['view_mode'] = 'tree'
         return action
-    
+
     def action_open_point_output(self):
         action = self.env['ir.actions.act_window']._for_xml_id('iot_base.iot_point_action')
-        action['domain'] = [('iot_device_id', 'in', self.ids), ('signal_type', '=', 'output')]
+        action['domain'] = [('iot_device_id', '=', self.id), ('signal_type', '=', 'output')]
+        action['context'] = {
+            'default_iot_device_id': self.id,
+            'default_signal_type': 'output',
+        }
+        action['view_mode'] = 'tree'
         return action
-    
+
     def action_generate_token(self):
         self.ensure_one()
         alphabet = 'abcdefghijkmnpqrstuvwxyz0123456789'

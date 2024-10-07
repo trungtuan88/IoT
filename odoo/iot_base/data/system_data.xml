@@ -3,5 +3,11 @@
         <record id="tcp_system" model="iot.communication">
             <field name="name">TCP</field>
         </record>
+
+        <record forcecreate="True" id="decimal_iot_uom" model="decimal.precision">
+            <field name="name">IoT Value Analog</field>
+            <field name="digits" eval="1"/>
+        </record>
+
     </data>
 </odoo>
