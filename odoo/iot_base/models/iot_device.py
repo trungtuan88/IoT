@@ -1,3 +1,5 @@
+import secrets
+
 from odoo import fields, models, api
 
 
@@ -27,7 +29,7 @@ class IoTDevice(models.Model):
     iot_point_ids = fields.One2many('iot.point', 'iot_device_id')
     count_point_input = fields.Integer(string="Point Input", compute="_compute_count_point", help="Number of input points")
     count_point_output = fields.Integer(string="Point Output", compute="_compute_count_point", help="Number of output points")
-    token = fields.Char(string="Token", help="This code is used to authenticate the device with the system.\
+    token = fields.Char(string="Token", readonly=True, help="This code is used to authenticate the device with the system.\
         The system also uses this code to manage the points assigned to that device.")
 
     @api.depends('iot_point_ids')
@@ -41,8 +43,20 @@ class IoTDevice(models.Model):
             r.count_point_output = mapped_data_output.get(r.id, 0)
     
     def action_open_point_input(self):
+        self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('iot_base.iot_point_action')
-        action['domain'] = [('iot_device_id', 'in', self.ids), ('signal_type', '=', 'input')]
+        
+        action['context'] = {
+            'default_iot_device_id': self.id,
+            'default_signal_type': 'input',
+        }
+        if self.count_point_input == 0:
+            action['view_mode'] = 'form'
+            # action['res_id'] = self.iot_point_ids.id
+            # action['views'] = []
+        else:
+            action['view_mode'] = 'tree'
+            action['domain'] = [('iot_device_id', '=', self.id), ('signal_type', '=', 'input')]
         return action
     
     def action_open_point_output(self):
@@ -50,3 +64,12 @@ class IoTDevice(models.Model):
         action['domain'] = [('iot_device_id', 'in', self.ids), ('signal_type', '=', 'output')]
         return action
     
+    def action_generate_token(self):
+        self.ensure_one()
+        alphabet = 'abcdefghijkmnpqrstuvwxyz0123456789'
+        while True:
+            token = '-'.join(''.join(secrets.choice(alphabet) for _ in range(4)) for _ in range(3))
+            if not self.env['iot.device'].search([('token', '=', token)]):
+                break
+        self.token = token.upper()
+        return True

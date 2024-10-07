@@ -59,7 +59,17 @@
                     </div>
                     <group>
                         <group>
-                            <field name="token" password="True" groups="iot_base.group_iot_user" />
+                            <label for="token" />
+                            <div class="o_row">
+                                <field name="token" />
+                                <button name="action_generate_token" type="object"
+                                    string="Generate"
+                                    help="This button helps you automatically generate a token. 
+                                    This token is guaranteed to be unique in your system."
+                                    class="btn-link mb-1 px-0" icon="fa-refresh"
+                                    confirm="This will create a new token for the device. Be careful if your device is connected to any points,
+                                    as they won't be able to update their status.?"/>
+                            </div>
                             <field name="iot_communication_id"
                                 widget="selection" />
                             <field name="ip" />
@@ -105,7 +115,8 @@
                                     t-if="record.image_128.raw_value"
                                     class="o_image_64_contain"/>
                                 <i
-                                    class="fa fa-microchip fa-4x"
+                                    t-attf-class="fa fa-microchip fa-4x"
+                                    title="IoT Device"
                                     t-if="!record.image_128.raw_value"
                                 />
                             </div>

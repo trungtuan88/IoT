@@ -39,7 +39,8 @@
 						<group>
 							<field name="name"
 								placeholder="Description of the point" />
-							<field name="token" password="True" groups="iot_base.group_iot_user"/>
+                            <field name="iot_device_id" />
+							<field name="token" groups="iot_base.group_iot_user"/>
 							<field name="signal_type" />
 							<field name="is_monitored" />
 						</group>
@@ -88,12 +89,12 @@
                         domain="[('signal_type', '=', 'input')]" />
                     <filter name="signal_type_out" string="Output"
                         domain="[('signal_type', '=', 'output')]" />
-                    <filter name="status_connect" string="Connected"
+                    <!-- <filter name="status_connect" string="Connected"
                         domain="[('status', '=', 'connected')]" />
                     <filter name="status_disconnect" string="Disconnected"
                         domain="[('status', '=', 'disconnected')]" />
                     <filter name="status_not_monitored" string="Not Monitored"
-                        domain="[('status', '=', 'not_monitored')]" />
+                        domain="[('status', '=', 'not_monitored')]" /> -->
                 <separator />
                 <group expand="0" string="Group By">
                     <filter name="group_by_signal_type" string="Signal Type"
@@ -111,7 +112,7 @@
 		<field name="name">Iot Point</field>
 		<field name="res_model">iot.point</field>
 		<field name="view_mode">tree,form</field>
-		<field name="view_id" ref="iot_point_view_form" />
+		<field name="view_id" ref="iot_point_view_tree" />
 		<field name="search_view_id" ref="iot_point_view_search" />
 		<field name="context">{'search_default_group_by_iot_device_id': 1}</field>
 		<field name="help" type="html">
