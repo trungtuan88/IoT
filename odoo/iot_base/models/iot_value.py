@@ -11,15 +11,12 @@ class IoTPoints(models.Model):
                                readonly=True, inverse='_set_last_value')
     value_char = fields.Char(string="Value Char", readonly=True, inverse='_set_last_value')
 
-    # @api.model_create_multi
-    # def create(self, vals):
-        
-    #     res = super().create(vals)
-    #     for r in res:
-    #         r.iot_point_id.last_value = r.value_boolean or r.value_analog or r.value_char
-    #         r.iot_point_id.last_value_date = r.create_date
-
     def _set_last_value(self):
         for r in self:
-            r.iot_point_id.last_value = "False" if not r.value_boolean else "True" if r.value_boolean else r.value_analog or r.value_char
+            if r.iot_point_id.type_data == 'digital':
+                r.iot_point_id.last_value = "False" if not r.value_boolean else "True"
+            elif r.iot_point_id.type_data == 'analog':
+                r.iot_point_id.last_value = r.value_analog
+            else:
+                r.iot_point_id.last_value = r.value_char
             r.iot_point_id.last_value_date = r.create_date

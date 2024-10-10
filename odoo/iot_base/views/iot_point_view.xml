@@ -26,6 +26,7 @@
         <field name="arch" type="xml">
             <form>
 				<sheet>
+                    <field name="status" invisible="1" />
 					<div class="oe_button_box" name="button_box">
 					</div>
 					<div class="badge rounded-pill text-bg-success float-end fs-6"

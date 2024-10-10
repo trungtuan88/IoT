@@ -73,9 +73,10 @@
                             <field name="iot_communication_id"
                                 widget="selection" />
                             <field name="ip" />
-                            <field name="group_id" />
+                            <field name="mac" />
                         </group>
                         <group>
+                            <field name="group_id" />
                             <field name="tag_ids"
                                 widget="many2many_tags"
                                 options="{'color_field': 'color'}" />

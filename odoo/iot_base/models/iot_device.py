@@ -17,6 +17,7 @@ class IoTDevice(models.Model):
     #     readonly=True
     #     )
     ip = fields.Char(string="IP", readonly=True, help="IP address of the device")
+    mac = fields.Char(string="MAC", readonly=True, help="MAC address of the device")
     group_id = fields.Many2one("iot.device.group", help="Group the devices together")
     tag_ids = fields.Many2many("iot.device.tag")
     last_update = fields.Datetime(string="Last Update", readonly=True, help="Last version update time")
