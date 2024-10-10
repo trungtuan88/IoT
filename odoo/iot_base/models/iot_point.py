@@ -11,14 +11,19 @@ class IoTPoints(models.Model):
 
     iot_device_id = fields.Many2one('iot.device')
     iot_value_ids = fields.One2many('iot.value', 'iot_point_id')
-    name = fields.Char(string="Name Point", default="New Point", help="Name of the point")
+    name = fields.Char(string="Name Point", help="Description of the point")
     point = fields.Char(string="Point", required=True, help="The unique identifier name of the point on the device.")
     token = fields.Char(related="iot_device_id.token", readonly=True)
     active = fields.Boolean(string="Active", default=True, help="Set it to False if you want to disable it, instead of deleting it.")
-    signal_type = fields.Selection([
+    type_signal = fields.Selection([
         ('input', 'Input'),
         ('output', 'Output'),
-    ], string="Signal Type")
+    ], string="Signal Type", default='input', required=True)
+    type_data = fields.Selection([
+        ('digital', 'Digital'),
+        ('analog', 'Analog'),
+        ('string', 'String'),
+    ], string="Type Data", default='analog', required=True)
     last_value = fields.Char(string="Last Value", readonly=True)
     last_value_date = fields.Datetime(string="Last Value Date", readonly=True)
     is_monitored = fields.Boolean(string='Is Monitored', default=False)

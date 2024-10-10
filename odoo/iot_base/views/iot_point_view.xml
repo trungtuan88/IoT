@@ -7,7 +7,7 @@
             <tree>
                 <field name="point" />
                 <field name="name" />
-                <field name="signal_type" />
+                <field name="type_signal" />
                 <field name="update_cycle" />
                 <field name="status" 
                     widget="badge"
@@ -45,14 +45,14 @@
 								placeholder="Description of the point" />
                             <field name="iot_device_id" />
 							<field name="token" groups="iot_base.group_iot_user"/>
-							<field name="signal_type" />
-							<field name="is_monitored" />
+							<field name="type_signal" />
+							<field name="type_data" />
 						</group>
 						<group>
 							<field name="update_cycle" />
+                            <field name="is_monitored" />
 							<field name="last_value" />
 							<field name="last_value_date" />
-							<field name="status" />
 						</group>
 					</group>
 				</sheet>
@@ -74,7 +74,7 @@
                 <field name="name" />
                 <field name="iot_device_id" />
                 <field name="status" />
-                <field name="signal_type" />
+                <field name="type_signal" />
                 <separator />
                     <filter
                         name="active"
@@ -89,10 +89,10 @@
                         help="Inactive"
                     />
                 <separator />
-                    <filter name="signal_type_in" string="Input"
-                        domain="[('signal_type', '=', 'input')]" />
-                    <filter name="signal_type_out" string="Output"
-                        domain="[('signal_type', '=', 'output')]" />
+                    <filter name="type_signal_in" string="Input"
+                        domain="[('type_signal', '=', 'input')]" />
+                    <filter name="type_signal_out" string="Output"
+                        domain="[('type_signal', '=', 'output')]" />
                     <!-- <filter name="status_connect" string="Connected"
                         domain="[('status', '=', 'connected')]" />
                     <filter name="status_disconnect" string="Disconnected"
@@ -101,8 +101,8 @@
                         domain="[('status', '=', 'not_monitored')]" /> -->
                 <separator />
                 <group expand="0" string="Group By">
-                    <filter name="group_by_signal_type" string="Signal Type"
-						context="{'group_by': 'signal_type'}" />
+                    <filter name="group_by_type_signal" string="Signal Type"
+						context="{'group_by': 'type_signal'}" />
 					<filter name="group_by_status" string="Status"
 						context="{'group_by': 'status'}" />
                     <filter name="group_by_iot_device_id" string="Device"

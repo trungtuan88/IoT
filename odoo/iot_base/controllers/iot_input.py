@@ -26,12 +26,13 @@ class IoTInput(http.Controller):
         for point, value in params.items():
             if isinstance(value, str) and value.lower() in ['true', 'false', 'on', 'off']:
                 value = value.lower() == 'true' or value.lower() == 'on'
-            iot_point = iot_device.iot_point_ids.filtered(lambda p: p.point == point and p.signal_type == 'input')
+            iot_point = iot_device.iot_point_ids.filtered(lambda p: p.point == point and p.type_signal == 'input')
             if not iot_point:
                 iot_point = request.env['iot.point'].sudo().create({
                     'iot_device_id': iot_device.id,
                     'point': point,
-                    'signal_type': 'input',
+                    'type_signal': 'input',
+                    'type_data': 'analog' if isinstance(value, (int, float)) else 'digital' if isinstance(value, bool) else 'string' if isinstance(value, str) else None,
                 })
             if iot_point.last_value == value:
                 iot_point.last_value_date = fields.Datetime.now()

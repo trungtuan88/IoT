@@ -34,8 +34,8 @@ class IoTDevice(models.Model):
 
     @api.depends('iot_point_ids')
     def _compute_count_point(self):
-        count_input = self.env['iot.point']._read_group([('iot_device_id', 'in', self.ids), ('signal_type', '=', 'input')], ['iot_device_id'], ['__count'])
-        count_output = self.env['iot.point']._read_group([('iot_device_id', 'in', self.ids), ('signal_type', '=', 'output')], ['iot_device_id'], ['__count'])
+        count_input = self.env['iot.point']._read_group([('iot_device_id', 'in', self.ids), ('type_signal', '=', 'input')], ['iot_device_id'], ['__count'])
+        count_output = self.env['iot.point']._read_group([('iot_device_id', 'in', self.ids), ('type_signal', '=', 'output')], ['iot_device_id'], ['__count'])
         mapped_data_input = {point_input.id: count for point_input, count in count_input}
         mapped_data_output = {point_output.id: count for point_output, count in count_output}
         for r in self:
@@ -45,20 +45,20 @@ class IoTDevice(models.Model):
     def action_open_point_input(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('iot_base.iot_point_action')
-        action['domain'] = [('iot_device_id', '=', self.id), ('signal_type', '=', 'input')]
+        action['domain'] = [('iot_device_id', '=', self.id), ('type_signal', '=', 'input')]
         action['context'] = {
             'default_iot_device_id': self.id,
-            'default_signal_type': 'input',
+            'default_type_signal': 'input',
         }
         action['view_mode'] = 'tree'
         return action
 
     def action_open_point_output(self):
         action = self.env['ir.actions.act_window']._for_xml_id('iot_base.iot_point_action')
-        action['domain'] = [('iot_device_id', '=', self.id), ('signal_type', '=', 'output')]
+        action['domain'] = [('iot_device_id', '=', self.id), ('type_signal', '=', 'output')]
         action['context'] = {
             'default_iot_device_id': self.id,
-            'default_signal_type': 'output',
+            'default_type_signal': 'output',
         }
         action['view_mode'] = 'tree'
         return action
